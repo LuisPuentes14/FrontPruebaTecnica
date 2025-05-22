@@ -1,10 +1,7 @@
-
-<div class="card flex justify-center">
-  <button pButton pRipple severity="success">
-      <WindowMaximizeIcon pButtonIcon />
-      <span pButtonLabel>Agregar Estudiante</span>
-  </button>
-</div>
+<br>
+<br>
+<p-button (click)="showDialog()" label="Agregar Estudiante" />
+<br>
 <br>
 <div class="card">
   <p-table [value]="students" [tableStyle]="{'min-width': '60rem'}">
@@ -46,3 +43,44 @@
   </p-table>
 
 </div>
+
+<p-dialog header="Agregar Estudiante" [(visible)]="visible" [style]="{ width: '25rem' }">
+  <form [formGroup]="studenForm" (ngSubmit)="onSubmit()">
+    <span class="p-text-secondary block mb-8">Update your information.</span>
+    <br>
+    <br>
+
+    <div class="flex items-center gap-4 mb-8">
+      <label for="selectedcreditProgram" class="font-semibold w-24">Programa de creditos</label>
+      <p-select formControlName="selectedcreditProgram" [options]="creditProgram" optionLabel="name"
+        placeholder="Seleccione programa" class="w-full md:w-56" />
+    </div>
+    <div *ngIf="studenForm.get('selectedcreditProgram')?.invalid && studenForm.get('selectedcreditProgram')?.touched">
+      <small style="color: red;">Seleccionar un programa es obligatorio</small>
+    </div> 
+
+    <div class="flex items-center gap-4 mb-4">
+      <label for="name" class="font-semibold w-24">Nombre</label>
+      <input pInputText id="name" class="flex-auto" autocomplete="off" />
+      <div *ngIf="studenForm.get('name')?.invalid && studenForm.get('name')?.touched">
+        <small style="color: red;" *ngIf="studenForm.get('name')?.errors?.['required']">El nombre es obligatorio</small>
+        <small style="color: red;" *ngIf="studenForm.get('name')?.errors?.['minlength']">Debe tener al menos 2 caracteres</small>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4 mb-8">
+      <label for="identification" class="font-semibold w-24">Numero identificación</label>
+      <input pInputText id="identification" class="flex-auto" autocomplete="off" />
+      <div *ngIf="studenForm.get('identification')?.invalid && studenForm.get('identification')?.touched">
+        <small style="color: red;" *ngIf="studenForm.get('identification')?.errors?.['required']">La identificación es obligatoria</small>
+        <small style="color: red;" *ngIf="studenForm.get('identification')?.errors?.['minlength']">Debe tener al menos 6 caracteres</small>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+      <p-button label="Save" type="submit" />
+    </div>
+  </form>
+
+</p-dialog>
