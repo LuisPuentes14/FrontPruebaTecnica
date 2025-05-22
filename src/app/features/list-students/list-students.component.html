@@ -33,7 +33,7 @@
         <td>{{ student.creditProgramName }}</td>
         <td>
           <div class="card flex justify-center">
-            <a [routerLink]="['/list-subjects-students', student.idStudent]" class="p-button font-bold">
+            <a [routerLink]="['/list-subjects-students', [student.idStudent, student.idCreditProgram]]" class="p-button font-bold">
               Ver Materias
             </a>
           </div>
@@ -57,11 +57,11 @@
     </div>
     <div *ngIf="studenForm.get('selectedcreditProgram')?.invalid && studenForm.get('selectedcreditProgram')?.touched">
       <small style="color: red;">Seleccionar un programa es obligatorio</small>
-    </div> 
+    </div>
 
     <div class="flex items-center gap-4 mb-4">
       <label for="name" class="font-semibold w-24">Nombre</label>
-      <input pInputText id="name" class="flex-auto" autocomplete="off" />
+      <input pInputText  formControlName="name" class="flex-auto" autocomplete="off" />
       <div *ngIf="studenForm.get('name')?.invalid && studenForm.get('name')?.touched">
         <small style="color: red;" *ngIf="studenForm.get('name')?.errors?.['required']">El nombre es obligatorio</small>
         <small style="color: red;" *ngIf="studenForm.get('name')?.errors?.['minlength']">Debe tener al menos 2 caracteres</small>
@@ -70,7 +70,7 @@
 
     <div class="flex items-center gap-4 mb-8">
       <label for="identification" class="font-semibold w-24">Numero identificación</label>
-      <input pInputText id="identification" class="flex-auto" autocomplete="off" />
+      <input pInputText  formControlName="identification" class="flex-auto" autocomplete="off" />
       <div *ngIf="studenForm.get('identification')?.invalid && studenForm.get('identification')?.touched">
         <small style="color: red;" *ngIf="studenForm.get('identification')?.errors?.['required']">La identificación es obligatoria</small>
         <small style="color: red;" *ngIf="studenForm.get('identification')?.errors?.['minlength']">Debe tener al menos 6 caracteres</small>

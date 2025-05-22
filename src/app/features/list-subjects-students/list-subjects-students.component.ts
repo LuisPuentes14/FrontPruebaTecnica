@@ -1,5 +1,4 @@
-import { routes } from './../../app.routes';
-import { StudentSubject } from '../../api/models';
+import { Subject } from './../../api/models/subject';
 import { StudentSubjectsService } from './../../api/services/student-subjects.service';
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
@@ -12,39 +11,142 @@ import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute } from '@angular/router';
+import { SubjectsService } from './../../api/services/subjects.service';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Dialog } from 'primeng/dialog';
+import { StudentSubject } from '../../api/models';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
   standalone: true,
-  imports: [TableModule,  CommonModule, InputTextModule, TagModule,
-    SelectModule, MultiSelectModule,  ButtonModule, IconFieldModule, InputIconModule, ButtonModule],
+  imports: [
+    TableModule,
+    CommonModule,
+    InputTextModule,
+    TagModule,
+    SelectModule,
+    MultiSelectModule,
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    ButtonModule,
+    Dialog,
+    ReactiveFormsModule,
+    Toast,
+  ],
+  providers: [MessageService],
   selector: 'app-list-subjects-students',
   templateUrl: './list-subjects-students.component.html',
-  styleUrls: ['./list-subjects-students.component.css']
+  styleUrls: ['./list-subjects-students.component.css'],
 })
 export default class ListSubjectsStudentsComponent implements OnInit {
-
-  public subjects: StudentSubject[] = [];
+  public subjects: Subject[] = [];
+  public subjectsStudents: StudentSubject[] = [];
   private idStudent: number = 0;
+  private idCreditProgram: number = 0;
 
-  constructor(api :StudentSubjectsService, private routes: ActivatedRoute) {
+  visible: boolean = false;
 
-    this.routes.paramMap.subscribe(params => {
-      this.idStudent = params.get('idStudent')! ? Number(params.get('idStudent')) : 0;
+  subjectForm = new FormGroup({
+    selectedSubject: new FormControl('', [Validators.required]),
+  });
+
+  constructor(
+    private api: StudentSubjectsService,
+    private routes: ActivatedRoute,
+    private apiSubjects: SubjectsService,
+    private messageService: MessageService
+  ) {
+    this.routes.paramMap.subscribe((params) => {
+      this.idStudent = params.get('idStudent')!
+        ? Number(params.get('idStudent'))
+        : 0;
     });
 
-    api.apiStudentSubjectsIdGet$Json({id : this.idStudent}).subscribe(
+    this.routes.paramMap.subscribe((params) => {
+      this.idCreditProgram = params.get('idCreditProgram')!
+        ? Number(params.get('idCreditProgram'))
+        : 0;
+    });
+
+    this.loadStudensSubjects();
+
+    this.apiSubjects
+      .apiSubjectsIdGet$Json({ id: this.idCreditProgram })
+      .subscribe(
+        (response) => {
+          this.subjects = response;
+        },
+        (error) => {
+          console.error('Error fetching subjects:', error.status);
+        }
+      );
+  }
+
+  ngOnInit() {}
+
+  showDialog() {
+    this.visible = true;
+  }
+
+  onSubmit() {
+    console.log(this.subjectForm.valid);
+
+    if (this.subjectForm.valid) {
+      console.log(this.subjectForm.value);
+      this.visible = false;
+
+      this.api
+        .apiStudentSubjectsPost$Json({
+          body: {
+            idStudent: this.idStudent,
+            subjectId:
+              (this.subjectForm.value.selectedSubject as Subject).idSubject ??
+              0,
+          },
+        })
+        .subscribe(
+          (response) => {
+            console.log('Student created successfully:', response);
+            this.loadStudensSubjects();
+            this.show('success', 'OK','Materia registrada');
+            this.subjectForm.reset(); // Limpiar el formulario después de enviar
+          },
+          (error) => {
+            console.error('Error fetching subjects:', error.error);
+            this.show('error', 'Invalid form', error.error);
+          }
+        );
+
+      this.subjectForm.reset(); // Limpiar el formulario después de enviar
+    } else {
+      console.error('Error creating student:', 'Invalid form');
+    }
+  }
+
+  show(tipo: string, mensaje: string, detail: string) {
+    this.messageService.add({
+      severity: tipo,
+      summary: mensaje,
+      detail: detail,
+    });
+  }
+
+  loadStudensSubjects() {
+    this.api.apiStudentSubjectsIdGet$Json({ id: this.idStudent }).subscribe(
       (response) => {
-        this.subjects = response;
-        console.log(response);
-        console.log(this.idStudent);
+        this.subjectsStudents = response;
       },
       (error) => {
         console.error('Error fetching subjects:', error.status);
       }
     );
-  }
 
-  ngOnInit() {
   }
-
 }

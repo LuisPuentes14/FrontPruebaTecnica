@@ -8,7 +8,7 @@ export const routes: Routes = [
       children: [],
     },
     {
-      path: 'list-subjects-students/:idStudent',
+      path: 'list-subjects-students/:idStudent/:idCreditProgram',
       title: 'Lista de Estudiantes',
       loadComponent: () => import('./features/list-subjects-students/list-subjects-students.component'),
       children: [],
@@ -16,7 +16,7 @@ export const routes: Routes = [
     {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'list-students'
+      redirectTo: 'list-subjects-students/1/1'
     }
 
 ];

@@ -1,24 +1,22 @@
-<div class="card flex justify-center">
-  <button pButton pRipple severity="success">
-      <WindowMaximizeIcon pButtonIcon />
-      <span pButtonLabel>Agregar Materia</span>
-  </button>
-</div>
-<br>
+<br />
+<br />
+<p-button (click)="showDialog()" label="Agregar Estudiante" />
+<br />
+<br />
 <div class="card">
-  <p-table [value]="subjects" [tableStyle]="{'min-width': '60rem'}">
+  <p-table [value]="subjectsStudents" [tableStyle]="{ 'min-width': '60rem' }">
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="idStudent" style="width:20%">
+        <th pSortableColumn="idStudent" style="width: 20%">
           Id <p-sortIcon field="idStudentSubject" />
         </th>
-        <th pSortableColumn="name" style="width:20%">
+        <th pSortableColumn="name" style="width: 20%">
           Nombre de Materia<p-sortIcon field="name" />
         </th>
-        <th pSortableColumn="numberDocument" style="width:20%">
+        <th pSortableColumn="numberDocument" style="width: 20%">
           Nombre de Profesor <p-sortIcon field="numberDocument" />
         </th>
-        <th pSortableColumn="creditProgramName" style="width:20%">
+        <th pSortableColumn="creditProgramName" style="width: 20%">
           Acciones <p-sortIcon field="creditProgramName" />
         </th>
       </tr>
@@ -31,11 +29,53 @@
         <td>{{ subject.teacherName }}</td>
         <td>
           <div class="card flex justify-center">
-            <p-button label="Ver Comapeñeros" icon="pi pi-search" severity="secondary" />
+            <p-button
+              label="Ver Comapeñeros"
+              icon="pi pi-search"
+              severity="secondary"
+            />
           </div>
         </td>
       </tr>
     </ng-template>
   </p-table>
-
 </div>
+
+<p-dialog
+  header="Agregar Materia"
+  [(visible)]="visible"
+  [style]="{ width: '25rem', height: '25rem' }"
+>
+  <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+    <span class="p-text-secondary block mb-8">Update your information.</span>
+    <br />
+    <br />
+
+    <div class="flex items-center gap-4 mb-8">
+      <label for="selectedSubject" class="font-semibold w-24">Materia</label>
+      <p-select
+        formControlName="selectedSubject"
+        [options]="subjects"
+        optionLabel="name"
+        placeholder="Seleccione programa"
+        class="w-full md:w-56"
+      />
+    </div>
+    <div
+      *ngIf="
+        subjectForm.get('selectedSubject')?.invalid &&
+        subjectForm.get('selectedSubject')?.touched
+      "
+    >
+      <small style="color: red">Seleccionar una materia es obligatorio</small>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+      <p-button label="Save" type="submit" />
+    </div>
+  </form>
+</p-dialog>
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+/>
