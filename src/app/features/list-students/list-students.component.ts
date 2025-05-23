@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CreditProgramsService, StudentsService } from '../../api/services';
 import { CreditProgram, Student, StudentSubject } from '../../api/models';
 import { TableModule } from 'primeng/table';
@@ -29,9 +29,10 @@ interface City {
   imports: [TableModule, RouterModule, CommonModule, InputTextModule, TagModule, Dialog, ReactiveFormsModule,Toast,
     SelectModule, MultiSelectModule, ButtonModule, IconFieldModule, InputIconModule, ButtonModule, ConfirmDialogModule],
   providers: [ MessageService, ConfirmationService],
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-list-students',
   templateUrl: './list-students.component.html',
-  styleUrls: ['./list-students.component.css']
+  styleUrls: ['./list-students.component.scss']
 })
 export default class ListStudentsComponent implements OnInit {
 

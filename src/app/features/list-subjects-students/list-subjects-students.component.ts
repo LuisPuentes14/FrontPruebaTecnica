@@ -1,6 +1,6 @@
 import { Subject } from './../../api/models/subject';
 import { StudentSubjectsService } from './../../api/services/student-subjects.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -49,7 +49,8 @@ import { RouterModule } from '@angular/router';
   providers: [MessageService, ConfirmationService],
   selector: 'app-list-subjects-students',
   templateUrl: './list-subjects-students.component.html',
-  styleUrls: ['./list-subjects-students.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./list-subjects-students.component.scss'],
 })
 export default class ListSubjectsStudentsComponent implements OnInit {
   public subjects: Subject[] = [];
@@ -95,7 +96,7 @@ export default class ListSubjectsStudentsComponent implements OnInit {
         (error) => {
           console.error('Error fetching subjects:', error.status);
         }
-      );       
+      );
   }
 
   ngOnInit() { }
@@ -158,8 +159,8 @@ export default class ListSubjectsStudentsComponent implements OnInit {
     );
 
   }
-  
-  loadStudens( idSubject: number) {
+
+  loadStudens(idSubject: number) {
 
     this.visibleListStudents = true;
 
@@ -201,7 +202,7 @@ export default class ListSubjectsStudentsComponent implements OnInit {
           );
 
       }
-    });  
+    });
   }
 
 }
