@@ -33,7 +33,11 @@
         <td>{{ student.creditProgramName }}</td>
         <td>
           <div class="card flex justify-center">
-            <a [routerLink]="['/list-subjects-students', [student.idStudent, student.idCreditProgram]]" class="p-button font-bold">
+            <p-button label="Eliminar" icon="pi pi-trash" severity="danger"
+              (onClick)="confirmDelte(student)"></p-button>
+          </div>
+          <div class="card flex justify-center">
+            <a [routerLink]="['/list-subjects-students', student.idStudent, student.idCreditProgram]" class="p-button font-bold">
               Ver Materias
             </a>
           </div>
@@ -84,3 +88,8 @@
   </form>
 
 </p-dialog>
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+<!-- Diálogo de confirmación -->
+<p-confirmDialog header="Confirmación" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+

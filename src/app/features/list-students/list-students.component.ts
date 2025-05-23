@@ -13,7 +13,10 @@ import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { Dialog } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Toast } from 'primeng/toast';
 
 
 interface City {
@@ -23,8 +26,9 @@ interface City {
 
 @Component({
   standalone: true,
-  imports: [TableModule, RouterModule, CommonModule, InputTextModule, TagModule, Dialog, ReactiveFormsModule,
-    SelectModule, MultiSelectModule, ButtonModule, IconFieldModule, InputIconModule, ButtonModule],
+  imports: [TableModule, RouterModule, CommonModule, InputTextModule, TagModule, Dialog, ReactiveFormsModule,Toast,
+    SelectModule, MultiSelectModule, ButtonModule, IconFieldModule, InputIconModule, ButtonModule, ConfirmDialogModule],
+  providers: [ MessageService, ConfirmationService],
   selector: 'app-list-students',
   templateUrl: './list-students.component.html',
   styleUrls: ['./list-students.component.css']
@@ -43,16 +47,11 @@ export default class ListStudentsComponent implements OnInit {
   });
 
   constructor(private api: StudentsService,
-    private apiCrediPrograms: CreditProgramsService) {
-    this.api.apiStudentsGet$Json().subscribe(
-      (response) => {
-        this.students = response;
-        console.log(this.students);
-      },
-      (error) => {
-        console.error('Error fetching students:', error);
-      }
-    );
+    private apiCrediPrograms: CreditProgramsService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+  ) {
+    this.loadStudens();
   }
 
   ngOnInit() {
@@ -65,6 +64,19 @@ export default class ListStudentsComponent implements OnInit {
         console.error('Error fetching students:', error);
       }
     )
+  }
+
+  loadStudens() {
+
+    this.api.apiStudentsGet$Json().subscribe(
+      (response) => {
+        this.students = response;
+        console.log(this.students);
+      },
+      (error) => {
+        console.error('Error fetching students:', error);
+      }
+    );
   }
 
   showDialog() {
@@ -80,7 +92,7 @@ export default class ListStudentsComponent implements OnInit {
         body: {
           name: this.studenForm.value.name ?? '',
           numberDocument: this.studenForm.value.identification ?? '',
-          idCreditProgram: (this.studenForm.value.selectedcreditProgram as CreditProgram).idCreditProgram?? 0 ,
+          idCreditProgram: (this.studenForm.value.selectedcreditProgram as CreditProgram).idCreditProgram ?? 0,
         }
       }).subscribe(
         (response) => {
@@ -96,6 +108,44 @@ export default class ListStudentsComponent implements OnInit {
     } else {
       this.studenForm.markAllAsTouched(); // Para mostrar errores si no ha tocado los campos
     }
+  }
+
+   show(tipo: string, mensaje: string, detail: string) {
+    this.messageService.add({
+      severity: tipo,
+      summary: mensaje,
+      detail: detail,
+    });
+  }
+
+  confirmDelte(student: Student, callback?: () => void) {
+
+    alert('¿Estás seguro de que deseas eliminar este registro?');
+    this.confirmationService.confirm({
+      message: '¿Estás seguro de que deseas eliminar este registro?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        // Aquí va la lógica de eliminación real (llamada a servicio, etc.)
+        console.log('Registro eliminado');
+        this.api
+          .apiStudentsIdDelete({ id: student.idStudent ?? 0 })
+          .subscribe(
+            (response) => {
+              console.log('Registro eliminado:', response);
+              this.loadStudens();
+              this.show('success', 'OK', 'Estudiante eliminado');
+            },
+            (error) => {
+              console.error('Error eliminando registro:', error.error);
+              this.show('error', 'Invalid form', error.error);
+            }
+          );
+
+      }
+    });
   }
 
 }

@@ -1,6 +1,12 @@
 <br />
 <br />
-<p-button (click)="showDialog()" label="Agregar Estudiante" />
+<p-button (click)="showDialog()" label="Agregar Materia" />
+
+<div class="card flex justify-center">
+  <a [routerLink]="['/list-students']" class="p-button font-bold">
+    Volver a Estudiantes
+  </a>
+</div>
 <br />
 <br />
 <div class="card">
@@ -16,6 +22,9 @@
         <th pSortableColumn="numberDocument" style="width: 20%">
           Nombre de Profesor <p-sortIcon field="numberDocument" />
         </th>
+        <th pSortableColumn="numberDocument" style="width: 20%">
+          Nombre de Estudiante <p-sortIcon field="numberDocument" />
+        </th>
         <th pSortableColumn="creditProgramName" style="width: 20%">
           Acciones <p-sortIcon field="creditProgramName" />
         </th>
@@ -27,25 +36,21 @@
         <td>{{ subject.idStudentSubject }}</td>
         <td>{{ subject.subjectName }}</td>
         <td>{{ subject.teacherName }}</td>
+        <td>{{ subject.studentName }}</td>
         <td>
+
           <div class="card flex justify-center">
-            <p-button
-              label="Ver Comapeñeros"
-              icon="pi pi-search"
-              severity="secondary"
-            />
+            <p-button label="Eliminar" icon="pi pi-trash" severity="danger"
+              (onClick)="confirmarEliminacion(subject)"></p-button>
           </div>
+          <p-button (click)="loadStudens(subject.subjectId)" label="Ver Comapeñeros" />
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
 
-<p-dialog
-  header="Agregar Materia"
-  [(visible)]="visible"
-  [style]="{ width: '25rem', height: '25rem' }"
->
+<p-dialog header="Agregar Materia" [(visible)]="visible" [style]="{ width: '25rem', height: '25rem' }">
   <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
     <span class="p-text-secondary block mb-8">Update your information.</span>
     <br />
@@ -53,20 +58,13 @@
 
     <div class="flex items-center gap-4 mb-8">
       <label for="selectedSubject" class="font-semibold w-24">Materia</label>
-      <p-select
-        formControlName="selectedSubject"
-        [options]="subjects"
-        optionLabel="name"
-        placeholder="Seleccione programa"
-        class="w-full md:w-56"
-      />
+      <p-select formControlName="selectedSubject" [options]="subjects" optionLabel="name"
+        placeholder="Seleccione programa" class="w-full md:w-56" />
     </div>
-    <div
-      *ngIf="
+    <div *ngIf="
         subjectForm.get('selectedSubject')?.invalid &&
         subjectForm.get('selectedSubject')?.touched
-      "
-    >
+      ">
       <small style="color: red">Seleccionar una materia es obligatorio</small>
     </div>
 
@@ -76,6 +74,22 @@
     </div>
   </form>
 </p-dialog>
-<p-toast
-  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
-/>
+
+<p-dialog header="Lista de Compañeros" [(visible)]="visibleListStudents" [style]="{ width: '25rem', height: '25rem' }">
+  <p-table [value]="listStudents" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template #header>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-student>
+      <tr>
+        <td>{{ student.studentName }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+<!-- Diálogo de confirmación -->
+<p-confirmDialog header="Confirmación" icon="pi pi-exclamation-triangle"></p-confirmDialog>

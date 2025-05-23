@@ -22,6 +22,10 @@ import { Dialog } from 'primeng/dialog';
 import { StudentSubject } from '../../api/models';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   standalone: true,
@@ -39,8 +43,10 @@ import { Toast } from 'primeng/toast';
     Dialog,
     ReactiveFormsModule,
     Toast,
+    ConfirmDialogModule,
+    RouterModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   selector: 'app-list-subjects-students',
   templateUrl: './list-subjects-students.component.html',
   styleUrls: ['./list-subjects-students.component.css'],
@@ -48,10 +54,12 @@ import { Toast } from 'primeng/toast';
 export default class ListSubjectsStudentsComponent implements OnInit {
   public subjects: Subject[] = [];
   public subjectsStudents: StudentSubject[] = [];
+  public listStudents: any[] = [];
   private idStudent: number = 0;
   private idCreditProgram: number = 0;
 
   visible: boolean = false;
+  visibleListStudents: boolean = false;
 
   subjectForm = new FormGroup({
     selectedSubject: new FormControl('', [Validators.required]),
@@ -61,7 +69,8 @@ export default class ListSubjectsStudentsComponent implements OnInit {
     private api: StudentSubjectsService,
     private routes: ActivatedRoute,
     private apiSubjects: SubjectsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {
     this.routes.paramMap.subscribe((params) => {
       this.idStudent = params.get('idStudent')!
@@ -86,10 +95,10 @@ export default class ListSubjectsStudentsComponent implements OnInit {
         (error) => {
           console.error('Error fetching subjects:', error.status);
         }
-      );
+      );       
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   showDialog() {
     this.visible = true;
@@ -115,7 +124,7 @@ export default class ListSubjectsStudentsComponent implements OnInit {
           (response) => {
             console.log('Student created successfully:', response);
             this.loadStudensSubjects();
-            this.show('success', 'OK','Materia registrada');
+            this.show('success', 'OK', 'Materia registrada');
             this.subjectForm.reset(); // Limpiar el formulario después de enviar
           },
           (error) => {
@@ -149,4 +158,51 @@ export default class ListSubjectsStudentsComponent implements OnInit {
     );
 
   }
+  
+  loadStudens( idSubject: number) {
+
+    this.visibleListStudents = true;
+
+    this.api.apiStudentSubjectsGetStudentSubjectsBySubjectIdSubjectIdGet$Json({ subjectId: idSubject }).subscribe(
+      (response) => {
+        this.listStudents = response;
+        console.log(this.listStudents, ' ---- ', response);
+      },
+      (error) => {
+        console.error('Error fetching subjects:', error.status);
+      }
+    );
+
+  }
+
+  confirmarEliminacion(studentSubject: StudentSubject, callback?: () => void) {
+
+    this.confirmationService.confirm({
+      message: '¿Estás seguro de que deseas eliminar este registro?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        // Aquí va la lógica de eliminación real (llamada a servicio, etc.)
+        console.log('Registro eliminado');
+        this.api
+          .apiStudentSubjectsIdDelete({ id: studentSubject.idStudentSubject ?? 0 })
+          .subscribe(
+            (response) => {
+              console.log('Registro eliminado:', response);
+              this.loadStudensSubjects();
+              this.show('success', 'OK', 'Materia eliminada');
+            },
+            (error) => {
+              console.error('Error eliminando registro:', error.error);
+              this.show('error', 'Invalid form', error.error);
+            }
+          );
+
+      }
+    });  
+  }
+
 }
+

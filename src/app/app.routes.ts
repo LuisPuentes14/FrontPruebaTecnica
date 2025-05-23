@@ -16,7 +16,7 @@ export const routes: Routes = [
     {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'list-subjects-students/1/1'
+      redirectTo: 'list-students'
     }
 
 ];
