@@ -1,79 +1,67 @@
+$azul-principal: #3660d3;
+$cian: #019bef;
+$texto: #1f2937;
+$fondo-claro: #f3f4f6;
+$hover: #dbeafe;
+$blanco: #ffffff;
 
-$primary: #3660d3;
-$primary-hover: #2c5282;
-$white: #ffffff;
-$secondary: #374151;
-$row-hover-bg: #f1f5f9;
-$border-color: #e5e7eb;
-
-.p-button.p-button-success {
-  background-color: $primary !important;
-  color: $white !important;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
+.p-button {
+  background-color: $azul-principal;
+  color: $blanco;
+  border: none;
+  border-radius: 6px;
   padding: 0.6rem 1.2rem;
-  display: inline-flex;
+  font-weight: bold;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s ease;
 
+  i.pi {
+    font-size: 1rem;
+  }
+
   &:hover {
-    background-color: $primary-hover !important;
-  }
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  span {
-    margin-left: 0.3rem;
+    background-color: $cian !important;
+    border: none;
   }
 }
 
-.p-datatable .p-datatable-thead > tr > th {
-  background-color: $primary !important;
-  color: $white !important;
+.card .p-datatable-thead > tr > th {
+  background-color: $azul-principal;
+  color: $blanco;
   font-weight: bold;
   padding: 1rem;
-  border-bottom: 2px solid darken($primary, 10%);
-  text-align: left;
 }
 
+.p-datatable-tbody > tr > td {
+  color: $texto;
+  padding: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+}
 .p-datatable .p-datatable-tbody > tr > td {
   padding: 0.85rem;
-  border-bottom: 1px solid $border-color;
-  color: $secondary;
+  border-bottom: 1px solid #e5e7eb;
+  color: $texto;
 }
 
-.p-datatable .p-datatable-tbody > tr:hover {
-  background-color: $row-hover-bg;
+.p-datatable-tbody > tr:nth-child(even) {
+  background-color: $fondo-claro;
 }
 
-.p-datatable .p-button.p-button-secondary:hover {
-  background-color: #3660d3 !important;
-  color: #ffffff !important;
+.p-datatable-tbody > tr:hover {
+  background-color: $hover;
 }
 
-.p-datatable .p-button.p-button-secondary {
-  background-color: transparent !important;
-  color: $primary !important;
-  border: 2px solid $primary !important;
-  border-radius: 6px;
-  font-weight: 500;
+a.p-button.font-bold {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
   font-size: 0.875rem;
-  padding: 0.45rem 1rem;
-  transition: all 0.3s ease;
-
-  i.pi {
-    margin-right: 0.5rem;
-  }
-
-  &:hover {
-    background-color: $primary !important;
-    color: $white !important;
-  }
+  color: #1e3a8a;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 6px;
+  background-color: transparent;
+  text-decoration: none;
+  text-align: initial;
 }
- 

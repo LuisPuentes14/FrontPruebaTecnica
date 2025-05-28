@@ -1,1 +1,68 @@
 /* You can add global styles to this file, and also import other style files */
+$azul-principal: #3660d3;
+$cian: #019bef;
+$texto: #1f2937;
+$fondo-claro: #f3f4f6;
+$hover: #dbeafe;
+$blanco: #ffffff;
+
+.p-button {
+  background-color: $azul-principal;
+  color: $blanco;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+
+  i.pi {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background-color: $cian !important;
+    border: none;
+  }
+}
+
+.card .p-datatable-thead > tr > th {
+  background-color: $azul-principal;
+  color: $blanco;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.p-datatable-tbody > tr > td {
+  color: $texto;
+  padding: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.85rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: $texto;
+}
+
+.p-datatable-tbody > tr:nth-child(even) {
+  background-color: $fondo-claro;
+}
+
+.p-datatable-tbody > tr:hover {
+  background-color: $hover;
+}
+
+a.p-button.font-bold {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #1e3a8a;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 6px;
+  background-color: transparent;
+  text-decoration: none;
+  text-align: initial;
+}

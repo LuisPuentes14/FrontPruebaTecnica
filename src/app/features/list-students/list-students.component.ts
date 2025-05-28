@@ -31,8 +31,9 @@ interface City {
   providers: [ MessageService, ConfirmationService],
   encapsulation: ViewEncapsulation.None,
   selector: 'app-list-students',
-  templateUrl: './list-students.component.html',
-  styleUrls: ['./list-students.component.scss']
+  styleUrls: ['./list-students.component.scss'],
+  templateUrl: './list-students.component.html'
+  
 })
 export default class ListStudentsComponent implements OnInit {
 
@@ -52,10 +53,13 @@ export default class ListStudentsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
   ) {
-    this.loadStudens();
+  
   }
 
   ngOnInit() {
+
+    this.loadStudens();
+
     this.apiCrediPrograms.apiCreditProgramsGet$Json().subscribe(
       (response) => {
         console.log(response);
@@ -98,7 +102,7 @@ export default class ListStudentsComponent implements OnInit {
       }).subscribe(
         (response) => {
           console.log('Student created successfully:', response);
-          this.students.push(response); // Agregar el nuevo estudiante a la lista
+          this.loadStudens() ; // Recargar la lista de estudiantes
           this.studenForm.reset(); // Limpiar el formulario después de enviar
         },
         (error) => {
@@ -120,8 +124,7 @@ export default class ListStudentsComponent implements OnInit {
   }
 
   confirmDelte(student: Student, callback?: () => void) {
-
-    alert('¿Estás seguro de que deseas eliminar este registro?');
+ 
     this.confirmationService.confirm({
       message: '¿Estás seguro de que deseas eliminar este registro?',
       header: 'Confirmar eliminación',

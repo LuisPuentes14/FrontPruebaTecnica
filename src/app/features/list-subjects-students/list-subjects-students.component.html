@@ -43,7 +43,10 @@
             <p-button label="Eliminar" icon="pi pi-trash" severity="danger"
               (onClick)="confirmarEliminacion(subject)"></p-button>
           </div>
-          <p-button (click)="loadStudens(subject.subjectId)" label="Ver Comapeñeros" />
+          <a  class="p-button font-bold" (click)="loadStudens(subject.subjectId)">Ver Comapeñeros
+             <!-- <p-button (click)="loadStudens(subject.subjectId)" label="Ver Comapeñeros" /> -->
+          </a>
+         
         </td>
       </tr>
     </ng-template>

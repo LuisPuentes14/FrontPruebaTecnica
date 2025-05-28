@@ -47,9 +47,9 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   providers: [MessageService, ConfirmationService],
+  encapsulation: ViewEncapsulation.None, 
   selector: 'app-list-subjects-students',
   templateUrl: './list-subjects-students.component.html',
-  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./list-subjects-students.component.scss'],
 })
 export default class ListSubjectsStudentsComponent implements OnInit {
